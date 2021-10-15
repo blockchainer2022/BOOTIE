@@ -129,7 +129,7 @@ const EventConference = () => {
 
   async function mint(mintCount) {
     if (contract) {
-      if (chainId === 1) {
+      if (chainId === 4) {
         if (mintCount === 0) {
           // swal("Atleast 1 AngryBunny should be minted", "", "info");
           setLessMintAmountAlert(true);
