@@ -129,122 +129,66 @@ const EventConference = () => {
 
   async function mint(mintCount) {
     if (contract) {
-      if (chainId === 4) {
-        const presaleOpen = await contract.methods.presaleOpen().call();
-        const saleOpen = await contract.methods.saleOpen().call();
-        const eligibility = await contract.methods
-          .checkPresaleEligiblity(account)
-          .call();
-        // console.log("saleopen:", saleOpen);
-        if (presaleOpen === false && saleOpen === false) {
-          setPreSale(true);
-        } else if (presaleOpen === true && saleOpen === false) {
-          if (eligibility) {
-            if (mintCount === 0) {
-              setLessMintAmountAlert(true);
-            } else {
-              setConfirmTransaction(true);
-              const finalPrice = Number(price) * mintCount;
-              contract.methods
-                .mintNFT(mintCount)
-                .send({ from: account, value: finalPrice })
-                .on("transactionHash", function () {
-                  // swal({
-                  //   title: "Minting NFT!",
-                  //   icon: "info",
-                  // });
-                  setConfirmTransaction(false);
-                  setMintingInProgress(true);
-                })
-                .on("confirmation", function () {
-                  const el = document.createElement("div");
-                  el.innerHTML =
-                    "View minted NFT on OpenSea : <a href='https://testnets.opensea.io/account '>View Now</a>";
-
-                  // swal({
-                  //   title: "NFT Minted!",
-                  //   content: el,
-                  //   icon: "success",
-                  // });
-                  setNftMinted(true);
-                  setConfirmTransaction(false);
-                  setMintingInProgress(false);
-                  setTimeout(() => {
-                    window.location.reload(false);
-                  }, 5000);
-                })
-                .on("error", function (error, receipt) {
-                  if (error.code === 4001) {
-                    // swal("Transaction Rejected!", "", "error");
-                    setTransactionRejected(true);
-                    setConfirmTransaction(false);
-                    setMintingInProgress(false);
-                  } else {
-                    // swal("Transaction Failed!", "", "error");
-                    setTransactionFailed(true);
-                    setConfirmTransaction(false);
-                    setMintingInProgress(false);
-                  }
-                });
-            }
-          } else {
-            setPreSaleEligibility(true);
-          }
+      if (chainId === 1) {
+        if (mintCount === 0) {
+          // swal("Atleast 1 AngryBunny should be minted", "", "info");
+          setLessMintAmountAlert(true);
         } else {
-          if (mintCount === 0) {
-            setLessMintAmountAlert(true);
-          } else {
-            setConfirmTransaction(true);
-            const finalPrice = Number(price) * mintCount;
-            contract.methods
-              .mintNFT(mintCount)
-              .send({ from: account, value: finalPrice })
-              .on("transactionHash", function () {
-                // swal({
-                //   title: "Minting NFT!",
-                //   icon: "info",
-                // });
-                setConfirmTransaction(false);
-                setMintingInProgress(true);
-              })
-              .on("confirmation", function () {
-                const el = document.createElement("div");
-                el.innerHTML =
-                  "View minted NFT on OpenSea : <a href='https://testnets.opensea.io/account '>View Now</a>";
-                // swal({
-                //   title: "NFT Minted!",
-                //   content: el,
-                //   icon: "success",
-                // });
-                setNftMinted(true);
+          setConfirmTransaction(true);
+          const finalPrice = Number(price) * mintCount;
+          contract.methods
+            .mintNFT(mintCount)
+            .send({ from: account, value: finalPrice })
+            .on("transactionHash", function () {
+              // swal({
+              //   title: "Minting NFT!",
+              //   icon: "info",
+              // });
+              setConfirmTransaction(false);
+              setMintingInProgress(true);
+            })
+            .on("confirmation", function () {
+              const el = document.createElement("div");
+              el.innerHTML =
+                "View minted NFT on OpenSea : <a href='https://testnets.opensea.io/account '>View Now</a>";
+
+              // swal({
+              //   title: "NFT Minted!",
+              //   content: el,
+              //   icon: "success",
+              // });
+              setNftMinted(true);
+              setConfirmTransaction(false);
+              setMintingInProgress(false);
+            })
+            .on("error", function (error, receipt) {
+              if (error.code === 4001) {
+                // swal("Transaction Rejected!", "", "error");
+                setTransactionRejected(true);
                 setConfirmTransaction(false);
                 setMintingInProgress(false);
-                setTimeout(() => {
-                  window.location.reload(false);
-                }, 5000);
-              })
-              .on("error", function (error, receipt) {
-                if (error.code === 4001) {
-                  // swal("Transaction Rejected!", "", "error");
-                  setTransactionRejected(true);
-                  setConfirmTransaction(false);
-                  setMintingInProgress(false);
-                } else {
-                  // swal("Transaction Failed!", "", "error");
-                  setTransactionFailed(true);
-                  setConfirmTransaction(false);
-                  setMintingInProgress(false);
-                }
-              });
-          }
+              } else {
+                // swal("Transaction Failed!", "", "error");
+                setTransactionFailed(true);
+                setConfirmTransaction(false);
+                setMintingInProgress(false);
+              }
+            });
         }
       } else {
+        // swal("Please switch to mainnet to mint AngryBunnies", "", "error");
         setswitchToMainnet(true);
       }
     } else {
+      // swal(
+      //   "",
+      //   "Please install an Ethereum-compatible browser or extension like MetaMask to use this dApp!",
+      //   "error"
+      // );
       setEthereumCompatibleBrowser(true);
     }
   }
+
   return (
     <>
       <SEO title="Bubbly Booties" />
